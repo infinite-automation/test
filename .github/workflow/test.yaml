@@ -1,0 +1,18 @@
+name: GitHub Secrets Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  secret-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use database credentials
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          echo "Connecting to database..."
+          echo "Username: $DB_USERNAME"
+          echo "Password: $DB_PASSWORD"
