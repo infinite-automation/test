@@ -1,4 +1,4 @@
-name: Slack Notification Demo
+name: Slack Failure Notification
 
 on:
   push:
@@ -9,12 +9,21 @@ jobs:
 
     steps:
       - name: Run build
-        run: echo "Build completed"
+        run: |
+          echo "Running build...
+          exit 1
 
-      - name: Send Slack notification
+      - name: Send Slack notification on failure
+        if: failure()
         uses: slackapi/slack-github-action@v4.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "GitHub Actions workflow completed successfully"
+            text: |
+              ❌ GitHub Actions workflow failed!
+
+              Repository: ${{ github.repository }}
+              Branch: ${{ github.ref_name }}
+              Workflow: ${{ github.workflow }}
+              Workflow URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
