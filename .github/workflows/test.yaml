@@ -1,18 +1,20 @@
-name: GitHub Secrets Demo
+name: Slack Notification Demo
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
-  secret-demo:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Use database credentials
-        env:
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          echo "Connecting to database..."
-          echo "Username: $DB_USERNAME"
-          echo "Password: $DB_PASSWORD"
+      - name: Run build
+        run: echo "Build completed"
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v4.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "GitHub Actions workflow completed successfully"
